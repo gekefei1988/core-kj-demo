@@ -1,0 +1,123 @@
+package com.direction.core.inf;
+
+import org.apache.shiro.SecurityUtils;
+
+import com.direction.core.inf.sys.user.UserProfile;
+
+// ~ File Information
+// ====================================================================================================================
+
+/**
+ * 用户信息工具.
+ * 
+ * <pre>
+ * 用户信息工具
+ * </pre>
+ * 
+ * @author liutao
+ * @since $Rev$
+ *
+ */
+public class UserProfileUtils {
+
+	// ~ Static Fields
+	// ==================================================================================================================
+
+	public static String COMP_UN_PERMISSION = "COMP_UN_PERMISSION";
+	
+	public static String DEPT_UN_PERMISSION = "DEPT_UN_PERMISSION";
+	
+	public static String TENANT_EMPTYE = "TENANT_EMPTYE";
+
+	// ~ Fields
+	// ==================================================================================================================
+
+	// ~ Constructors
+	// ==================================================================================================================
+
+	// ~ Methods
+	// ==================================================================================================================
+
+	/**
+	 * 获取当前登陆的用户信息.
+	 * 
+	 * @return
+	 */
+	public static UserProfile getUserProfile() {
+
+		return (UserProfile) SecurityUtils.getSubject().getPrincipal();
+	}
+
+	/**
+	 * 获取当前登陆的用户ID.
+	 * 
+	 * @return
+	 */
+	public static String getUserId() {
+
+		UserProfile profile = getUserProfile();
+		if (profile != null) {
+			return profile.getUserId();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * 获取租户ID.
+	 * 
+	 * @return
+	 */
+	public static String getTenantId() {
+		
+		UserProfile profile = getUserProfile();
+		if (profile != null) {
+			return profile.getTenantId();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * 获取租户ID.
+	 * 
+	 * @return
+	 */
+	public static String getSearchTenantId() {
+		
+		UserProfile profile = getUserProfile();
+		if (profile != null) {
+			return profile.isSuperAdmin() ? null : profile.getTenantId();
+		}
+
+		return TENANT_EMPTYE;
+	}
+	
+	/**
+	 * 判断是否超级管理员.
+	 * 
+	 * @return
+	 */
+	public static boolean isSuperAdmin() {
+
+		UserProfile user = UserProfileUtils.getUserProfile();
+		return (user != null && user.isSuperAdmin());
+	}
+	
+	public static boolean isGov() {
+		
+		UserProfile user = UserProfileUtils.getUserProfile();
+		
+		return (user != null  && user.isGov());
+	}
+
+	/**
+	 * 获取访问的IP.
+	 * 
+	 * @return
+	 */
+	public static String getReqIp() {
+
+		return SecurityUtils.getSubject().getSession().getHost();
+	}
+}

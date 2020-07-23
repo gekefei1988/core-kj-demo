@@ -1,0 +1,80 @@
+package com.direction.core.modules.sys.role.repository;
+
+import java.util.Set;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.direction.core.modules.sys.role.entity.Role;
+import com.direction.spring.mvc.repository.BaseRepository;
+
+// ~ File Information
+// ====================================================================================================================
+
+/**
+ * 角色数据层.
+ * 
+ * <pre>
+ * 	角色数据层
+ * </pre>
+ * 
+ * @author liutao
+ * @since $Rev$
+ *
+ */
+@Repository
+public interface RoleRepository extends BaseRepository<Role, String> {
+
+	// ~ Static Fields
+	// ==================================================================================================================
+
+	// ~ Methods
+	// ==================================================================================================================
+
+	/**
+	 * 根据角色主键查询角色.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Query(value = "from Role where roleId = ?1 ")
+	Role get(String id);
+	
+	/**
+	 * 根据角色主键查询角色.
+	 * 
+	 * @param tenantId
+	 * @param roleCode
+	 * @return
+	 */
+	@Query(value = "from Role where (tenantId = ?1 or sys = true) and roleCode = ?2 ")
+	Role getCode(String tenantId, String roleCode);
+	
+	/**
+	 * 根据用户ID查询所负责的角色ID.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = " select  r.role_id   "
+	    + "from  sys_role  r , sys_user_role  ur ,sys_user u "
+	    + "where r.role_id = ur.role_id  "
+	    + "and   ur.user_id = u.user_id  "
+	    + "and   r.status = '0'  "
+	    + "and   u.user_id = ?1  ")
+	Set<String> getRoleIdsByUser(String userId);
+	
+	/**
+	 * 根据用户ID查询所负责的角色Code.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Query(nativeQuery = true, value = " select  r.role_code   "
+	    + "from  sys_role  r , sys_user_role  ur ,sys_user u "
+	    + "where r.role_id = ur.role_id  "
+	    + "and   ur.user_id = u.user_id  "
+	    + "and   r.status = '0'  "
+	    + "and   u.user_id = ?1  ")
+	Set<String> selectRoleKeys(String userId);
+}
