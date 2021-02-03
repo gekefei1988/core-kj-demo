@@ -58,7 +58,7 @@
 		<jmimemagic.version>0.1.5</jmimemagic.version>
 		<zxing.version>3.3.2</zxing.version>
 		<jsoup.version>1.11.3</jsoup.version>
-		<ant.version>1.9.7</ant.version>
+		<ant.version>1.10.9</ant.version>
 		<fst.version>2.57</fst.version>
 		<json.version>20180130</json.version>
 		<activation.version>1.1.1</activation.version>
